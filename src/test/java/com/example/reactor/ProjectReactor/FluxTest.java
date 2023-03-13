@@ -1,13 +1,14 @@
 package com.example.reactor.ProjectReactor;
 
+import com.example.reactor.ProjectReactor.entity.Contact;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.GroupedFlux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 public class FluxTest {
@@ -141,6 +142,38 @@ public class FluxTest {
         just.collectMap(
                 item -> item.split(":")[0],
                 item -> item.split(":")[1]);
+    }
+
+    @Test
+    public void startWith(){
+        Flux<String> just = Flux.just("Ravi", "Reddy");
+        Flux<String> pannala = just.startWith("Pannala");
+        Flux<String> ayaan = pannala.startWith(Arrays.asList("Ayaan"));
+        Flux<String> hello = ayaan.startWith(Mono.just("Hello"));
+        hello.subscribe(s->System.out.println(s));
+
+    }
+
+    @Test
+    public void concatenateWithValues(){
+        Flux<String> stringFlux = Flux.just("avi", "annala").concatWithValues("Reddy", "Pannala");
+        stringFlux.subscribe(s->System.out.println("ConcatenateWith Values-->"+s));
+    }
+
+    @Test
+    public void groupBy(){
+        Flux<Contact> contactFlux = Flux.fromIterable(fetchContact());
+        Flux<GroupedFlux<String, Contact>> groupedFluxFlux = contactFlux.groupBy(Contact::getName);
+        Mono<Map<String, Collection<Contact>>> mapMono = contactFlux.collectMultimap(Contact::getEmail, item -> item);
+        Mono<Map<String, String>> mapMono1 = contactFlux.collectMap(Contact::getName, Contact::getEmail);
+        Mono<List<Contact>> listMono = contactFlux.collectSortedList(Comparator.comparing(Contact::getName));
+        mapMono.subscribe(System.out::println);
+    }
+    public List<Contact> fetchContact(){
+        List<Contact> contacts = new ArrayList<>();
+        contacts.add(new Contact("1","Ravi","ravi@gmail.com","344343"));
+        contacts.add(new Contact("2","Raju","ravi@gmail.com","332"));
+        return contacts;
     }
 
 }

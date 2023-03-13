@@ -59,6 +59,7 @@ public class FluxSample {
         Flux<Integer> range = Flux.range(1, 5);
         range.subscribe(r -> System.out.println(r));
 
+
         StepVerifier.create(just.log()).expectNext("Ravi").expectNext("Ramu").expectComplete();
 
         Flux.empty().log();

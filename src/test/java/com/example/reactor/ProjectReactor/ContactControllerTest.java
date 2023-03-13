@@ -63,7 +63,7 @@ public class ContactControllerTest {
                 .exchange()
                 .returnResult(Contact.class).getResponseBody().log();
 
-        StepVerifier.create(updateFlux).expectSubscription().expectNextMatches(c -> c.getEmail().equals("wtc@email.com")).verifyComplete();
+        StepVerifierEx.create(updateFlux).expectSubscription().expectNextMatches(c -> c.getEmail().equals("wtc@email.com")).verifyComplete();
     }*/
 
 

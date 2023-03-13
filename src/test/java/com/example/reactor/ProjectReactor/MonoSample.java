@@ -33,19 +33,33 @@ public class MonoSample {
 
     @Test
     public void createMono() {
+        //Create mono with Just
         Mono<String> mono = Mono.just("Ravi");
         mono.subscribe(a -> System.out.println("Mono with Just--->" + a));
+
+        //Create Mono With Error
         Mono<Object> error = Mono.error(new Throwable());
         error.subscribe(a -> System.out.println("Mono with Error--->" + a));
+
+        //Create mono with empty
         Mono<Object> empty = Mono.empty();
         empty.subscribe(a -> System.out.println("Mono with empty--->" + a));
+
+        //Create Mono from other publisher
         Mono<Integer> from = Mono.from(Flux.range(1, 10));
         from.subscribe(s -> System.out.println("Mono with from --->" + s));
-        Random rd = new Random();
-        Mono<Double> doubleMono = Mono.fromSupplier(rd::nextDouble);
+
+        //Create mono from Supplier
+        Mono<Double> doubleMono = Mono.fromSupplier(Math::random);
         doubleMono.subscribe(s -> System.out.println("From Supplier-->" + s));
+
+        //Create Mono from callable
         Mono<String> hello = Mono.fromCallable(() -> "Hello");
         hello.subscribe(a -> System.out.println("From Callable --->" + a));
+
+        //Create Mono from Runnable
+        Mono<Object> objectMono = Mono.fromRunnable(() -> {});
+        objectMono.subscribe(a->System.out.println(a));
     }
 
     @Test
